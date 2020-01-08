@@ -1,0 +1,16 @@
+
+FROM node:12-slim
+
+EXPOSE 3000
+RUN mkdir /app && chown -R node:node /app
+WORKDIR /app
+
+USER node
+COPY --chown=node:node package.json package-lock*.json ./
+RUN npm install && npm cache clean --force
+ENV PATH=/app/node_modules/.bin:$PATH
+
+COPY --chown=node:node . .
+COPY ./src ./app
+
+CMD ["node", "./src"]
